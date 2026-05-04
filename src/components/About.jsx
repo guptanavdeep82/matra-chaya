@@ -25,17 +25,14 @@ export default function About() {
             </div>
           </div>
 
-          <div className="rounded-[20px] overflow-hidden bg-navy-light aspect-video flex flex-col items-center justify-center relative border-[3px] border-[#222] shadow-[0_20px_60px_rgba(0,0,0,0.2)] cursor-pointer hover:border-gold hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.3)] transition">
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-br from-black/60 to-[#111]/90">
-              <div className="w-[72px] h-[72px] rounded-full bg-red flex items-center justify-center mb-4 transition hover:scale-110">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 fill-white ml-1">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-              <div className="text-white/80 text-sm font-semibold">Watch Our Story</div>
-              <div className="text-white/40 text-xs mt-1.5">Matrachaya Foundation — Corporate Film</div>
-            </div>
-          </div>
+          <video
+            controls
+            className="rounded-[20px] overflow-hidden bg-navy-light aspect-video w-full border-[3px] border-[#222] shadow-[0_20px_60px_rgba(0,0,0,0.2)] hover:border-gold hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.3)] transition"
+            poster=""
+          >
+            <source src="/asset/VID-20260430-WA0028.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
     </section>
