@@ -26,12 +26,12 @@ function App() {
       <Scholarship />
       <Countries />
       <Timeline />
-      <Eligibility />
       <Pattern />
-      <Process />
+      <Eligibility />
       <About />
-      <RegisterForm />
+      <Process />
       <Gallery />
+      <RegisterForm />
       <FAQ />
       <Footer />
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export default function Gallery() {
   const images = [
@@ -28,16 +28,16 @@ export default function Gallery() {
   ];
 
   const [current, setCurrent] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const next = useCallback(() => setCurrent((c) => (c + 1) % images.length), [images.length]);
+  const prev = useCallback(() => setCurrent((c) => (c === 0 ? images.length - 1 : c - 1)), [images.length]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % images.length);
-    }, 4000);
+    if (isHovered) return;
+    const timer = setInterval(next, 3000);
     return () => clearInterval(timer);
-  }, [images.length]);
-
-  const prev = () => setCurrent((c) => (c === 0 ? images.length - 1 : c - 1));
-  const next = () => setCurrent((c) => (c + 1) % images.length);
+  }, [isHovered, next]);
 
   return (
     <section id="gallery" className="bg-cream py-16">
@@ -49,64 +49,79 @@ export default function Gallery() {
         </p>
       </div>
 
-      <div className="w-full px-[5vw] relative">
-        {/* Main slider */}
-        <div className="relative rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.25)] bg-navy aspect-[16/9] max-h-[520px]">
-          {images.map((img, i) => (
-            <div
-              key={img.caption}
-              className={`absolute inset-0 transition-opacity duration-700 ${i === current ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-            >
-              <img src={img.src} alt={img.caption} className="w-full h-full object-cover" />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 md:p-10">
-                <p className="text-white text-sm md:text-base font-semibold max-w-xl">{img.caption}</p>
+      <div
+        className="w-full relative"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Horizontal carousel */}
+        <div className="relative flex items-center justify-center gap-4 px-[5vw] h-[320px] md:h-[400px]">
+          {/* Prev visible image */}
+          {(() => {
+            const idx = (current - 1 + images.length) % images.length;
+            return (
+              <div
+                key={`prev-${idx}`}
+                className="hidden md:block flex-shrink-0 w-[15%] h-full rounded-xl overflow-hidden opacity-40 scale-90 cursor-pointer transition-all duration-500"
+                onClick={() => setCurrent(idx)}
+              >
+                <img src={images[idx].src} alt={images[idx].caption} className="w-full h-full object-cover" />
               </div>
-            </div>
-          ))}
+            );
+          })()}
 
-          {/* Nav arrows */}
-          <button
-            onClick={prev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xl flex items-center justify-center hover:bg-white/40 transition cursor-pointer"
-            aria-label="Previous"
-          >
-            ‹
-          </button>
-          <button
-            onClick={next}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white text-xl flex items-center justify-center hover:bg-white/40 transition cursor-pointer"
-            aria-label="Next"
-          >
-            ›
-          </button>
+          {/* Center active image */}
+          <div className="relative flex-shrink-0 w-full md:w-[65%] h-full rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-navy transition-all duration-500 z-10">
+            <img src={images[current].src} alt={images[current].caption} className="w-full h-full object-cover" />
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-5 md:p-8">
+              <p className="text-white text-sm md:text-base font-semibold">{images[current].caption}</p>
+            </div>
+
+            {/* Left arrow */}
+            <button
+              onClick={prev}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-red text-white text-lg flex items-center justify-center shadow-lg hover:bg-red-light transition cursor-pointer"
+              aria-label="Previous"
+            >
+              ‹
+            </button>
+            {/* Right arrow */}
+            <button
+              onClick={next}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-red text-white text-lg flex items-center justify-center shadow-lg hover:bg-red-light transition cursor-pointer"
+              aria-label="Next"
+            >
+              ›
+            </button>
+          </div>
+
+          {/* Next visible image */}
+          {(() => {
+            const idx = (current + 1) % images.length;
+            return (
+              <div
+                key={`next-${idx}`}
+                className="hidden md:block flex-shrink-0 w-[15%] h-full rounded-xl overflow-hidden opacity-40 scale-90 cursor-pointer transition-all duration-500"
+                onClick={() => setCurrent(idx)}
+              >
+                <img src={images[idx].src} alt={images[idx].caption} className="w-full h-full object-cover" />
+              </div>
+            );
+          })()}
         </div>
 
-        {/* Thumbnails */}
-        <div className="flex gap-3 mt-5 overflow-x-auto pb-2 scrollbar-hide justify-center">
+        {/* Thumbnails strip */}
+        <div className="flex gap-2 mt-6 overflow-x-auto pb-2 px-[5vw] scrollbar-hide justify-center">
           {images.map((img, i) => (
             <button
               key={img.caption}
               onClick={() => setCurrent(i)}
-              className={`flex-shrink-0 w-20 h-14 md:w-28 md:h-20 rounded-lg overflow-hidden border-2 transition cursor-pointer ${
-                i === current ? 'border-red scale-105 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'
+              className={`flex-shrink-0 w-16 h-11 md:w-24 md:h-16 rounded-lg overflow-hidden border-2 transition cursor-pointer ${
+                i === current ? 'border-red scale-105 shadow-md' : 'border-transparent opacity-50 hover:opacity-100'
               }`}
             >
               <img src={img.src} alt={img.caption} className="w-full h-full object-cover" />
             </button>
-          ))}
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-4">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              className={`w-2.5 h-2.5 rounded-full transition cursor-pointer ${
-                i === current ? 'bg-red w-7' : 'bg-navy/25 hover:bg-navy/50'
-              }`}
-              aria-label={`Go to slide ${i + 1}`}
-            />
           ))}
         </div>
       </div>

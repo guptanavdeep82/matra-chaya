@@ -1,9 +1,9 @@
 export default function Scholarship() {
   const cards = [
-    { crown: '👑', pct: '100%', label: 'Full Tuition Scholarship', desc: 'Complete tuition waiver for the highest-achieving candidates — your entire MBBS tuition, covered.', cls: 'bg-gradient-to-br from-red to-[#A01828] text-white shadow-red/35 shadow-xl' },
-    { crown: '🥈', pct: '75%', label: 'Three-Quarter Scholarship', desc: 'Awarded to strong performers — three-quarters of your tuition fee taken care of.', cls: 'bg-white/10 border border-white/20 text-white' },
-    { crown: '🥉', pct: '50%', label: 'Half Tuition Scholarship', desc: 'Half your tuition fee waived — a significant step toward affordable MBBS abroad.', cls: 'bg-white/[0.07] border border-white/[0.13] text-white' },
-    { crown: '🎖️', pct: '25%', label: 'Merit Scholarship', desc: 'Recognizing consistent performers — a quarter of tuition fee scholarship for eligible candidates.', cls: 'bg-white/[0.04] border border-white/[0.08] text-white/85' },
+    { crown: '👑', pct: '100%', label: 'Full Tuition Scholarship', desc: 'Complete tuition waiver for the highest-achieving candidates — your entire MBBS tuition, covered.' },
+    { crown: '🥈', pct: '75%', label: 'Three-Quarter Scholarship', desc: 'Awarded to strong performers — three-quarters of your tuition fee taken care of.' },
+    { crown: '🥉', pct: '50%', label: 'Half Tuition Scholarship', desc: 'Half your tuition fee waived — a significant step toward affordable MBBS abroad.' },
+    { crown: '🎖️', pct: '25%', label: 'Merit Scholarship', desc: 'Recognizing consistent performers — a quarter of tuition fee scholarship for eligible candidates.' },
   ];
 
   return (
@@ -25,7 +25,7 @@ export default function Scholarship() {
           {cards.map((c) => (
             <div
               key={c.pct}
-              className={`rounded-[18px] p-8 text-center transition hover:-translate-y-1.5 ${c.cls}`}
+              className="rounded-[18px] p-8 text-center transition hover:-translate-y-1.5 bg-white/10 border border-white/20 text-white hover:bg-gradient-to-br hover:from-red hover:to-[#A01828] hover:text-white hover:shadow-red/35 hover:shadow-xl hover:border-transparent"
             >
               <div className="text-[30px] mb-3.5">{c.crown}</div>
               <div className="font-sans text-[56px] font-bold leading-none mb-1.5">{c.pct}</div>

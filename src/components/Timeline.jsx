@@ -10,11 +10,11 @@ export default function Timeline() {
   ];
 
   return (
-    <section id="timeline" className="bg-cream">
+    <section id="timeline" className="bg-navy">
       <div className="section-inner">
-        <span className="section-tag">Important Dates</span>
-        <h2 className="section-title">Examination Calendar 2026</h2>
-        <p className="section-desc mb-12">
+        <span className="section-tag !text-gold-light !border-white/10 !bg-white/5">Important Dates</span>
+        <h2 className="section-title light">Examination Calendar 2026</h2>
+        <p className="section-desc light mb-12">
           All key dates at a glance. Mark your calendar — every milestone matters.
         </p>
         <div className="mt-14 overflow-x-auto pb-4">
@@ -34,8 +34,8 @@ export default function Timeline() {
                   {item.dot}
                 </div>
                 <div className="font-mono text-[11px] text-red font-semibold mb-1 text-center tracking-wide">{item.date}</div>
-                <div className="text-[13px] font-bold text-navy text-center mb-1 leading-snug">{item.title}</div>
-                <div className="text-[11px] text-muted text-center leading-relaxed max-w-[110px]">{item.desc}</div>
+                <div className="text-[13px] font-bold text-white text-center mb-1 leading-snug">{item.title}</div>
+                <div className="text-[11px] text-white/60 text-center leading-relaxed max-w-[110px]">{item.desc}</div>
               </div>
             ))}
           </div>
