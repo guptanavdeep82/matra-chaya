@@ -30,7 +30,7 @@ export default function About() {
             className="rounded-[20px] overflow-hidden bg-navy-light aspect-video w-full border-[3px] border-[#222] shadow-[0_20px_60px_rgba(0,0,0,0.2)] hover:border-gold hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(0,0,0,0.3)] transition"
             poster=""
           >
-            <source src="/asset/VID-20260430-WA0028.mp4" type="video/mp4" />
+            <source src="https://api.medicine.getmyuniversity.com/public/VID-20260430-WA0028.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
