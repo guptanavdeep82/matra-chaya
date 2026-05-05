@@ -7,9 +7,8 @@ const countries = ['Kazakhstan','Uzbekistan','Russia','Kyrgyzstan','Timor Leste'
 
 export default function RegisterForm() {
   const [tab, setTab] = useState('register');
-  const [showPass, setShowPass] = useState(false);
-  const [showPass2, setShowPass2] = useState(false);
   const [showLogPass, setShowLogPass] = useState(false);
+  const [registerStep, setRegisterStep] = useState(1);
   const [otp, setOtp] = useState('');
   const [enteredOtp, setEnteredOtp] = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
@@ -21,8 +20,7 @@ export default function RegisterForm() {
     city: '', state: '', academic_state: '', neet_status: '', neet_roll_number: '',
     father_name: '', mother_name: '', aadhar_number: '', date_of_birth: '',
     communication_address: '', pin_code: '', countries_preferred: [],
-    aadhar_card: null, passport_photo: null, class_12_marksheet: null, neet_admit_card: null,
-    password: '', password_confirmation: ''
+    aadhar_card: null, passport_photo: null, class_12_marksheet: null, neet_admit_card: null
   });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
@@ -78,6 +76,21 @@ export default function RegisterForm() {
     }
   };
 
+  const handleNextStep = () => {
+    const requiredFields = ['first_name', 'last_name', 'email', 'mobile', 'city', 'state', 'academic_state', 'neet_status', 'neet_roll_number'];
+    const hasEmptyField = requiredFields.some((field) => !form[field]);
+    if (hasEmptyField) {
+      setMsg({ type: 'error', text: 'Please fill all required details before continuing.' });
+      return;
+    }
+    if (!otpVerified) {
+      setMsg({ type: 'error', text: 'Please verify your mobile number with OTP before continuing.' });
+      return;
+    }
+    setMsg({ type: '', text: '' });
+    setRegisterStep(2);
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!otpVerified) {
@@ -107,7 +120,8 @@ export default function RegisterForm() {
       const data = await res.json();
       if (data.success) {
         setMsg({ type: 'success', text: data.message || 'Registration successful!' });
-        setForm({ first_name: '', last_name: '', email: '', mobile: '', city: '', state: '', academic_state: '', neet_status: '', neet_roll_number: '', father_name: '', mother_name: '', aadhar_number: '', date_of_birth: '', communication_address: '', pin_code: '', countries_preferred: [], aadhar_card: null, passport_photo: null, class_12_marksheet: null, neet_admit_card: null, password: '', password_confirmation: '' });
+        setForm({ first_name: '', last_name: '', email: '', mobile: '', city: '', state: '', academic_state: '', neet_status: '', neet_roll_number: '', father_name: '', mother_name: '', aadhar_number: '', date_of_birth: '', communication_address: '', pin_code: '', countries_preferred: [], aadhar_card: null, passport_photo: null, class_12_marksheet: null, neet_admit_card: null });
+        setRegisterStep(1);
         setOtp('');
         setEnteredOtp('');
         setOtpVerified(false);
@@ -203,6 +217,12 @@ export default function RegisterForm() {
                     {msg.text}
                   </div>
                 )}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className={`flex-1 rounded-full py-2 text-center text-xs font-bold ${registerStep === 1 ? 'bg-navy text-white' : 'bg-sky text-muted'}`}>Step 1: Personal & NEET</div>
+                  <div className={`flex-1 rounded-full py-2 text-center text-xs font-bold ${registerStep === 2 ? 'bg-navy text-white' : 'bg-sky text-muted'}`}>Step 2: Documents & Submit</div>
+                </div>
+                {registerStep === 1 && (
+                  <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
                   <div>
                     <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">First Name</label>
@@ -279,6 +299,13 @@ export default function RegisterForm() {
                     <input type="text" name="neet_roll_number" value={form.neet_roll_number} onChange={handleChange} placeholder="Enter NEET Roll No." required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
                   </div>
                 </div>
+                <button type="button" onClick={handleNextStep} className="w-full py-3.5 bg-red text-white border-0 rounded-[10px] text-[15px] font-bold font-sans cursor-pointer transition hover:bg-red-light hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(215,38,56,0.3)] flex items-center justify-center gap-2">
+                  Continue to Step 2 →
+                </button>
+                  </>
+                )}
+                {registerStep === 2 && (
+                  <>
                 <div className="text-sm font-bold text-navy mt-5 mb-3">Additional Details</div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
                   <div>
@@ -333,28 +360,19 @@ export default function RegisterForm() {
                     </label>
                   ))}
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Password</label>
-                    <div className="relative">
-                      <input type={showPass ? 'text' : 'password'} name="password" value={form.password} onChange={handleChange} placeholder="Create password" required className="w-full px-3.5 py-2.5 pr-11 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                      <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-0 text-muted text-[15px] cursor-pointer" onClick={() => setShowPass(!showPass)}>👁️</button>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Confirm Password</label>
-                    <div className="relative">
-                      <input type={showPass2 ? 'text' : 'password'} name="password_confirmation" value={form.password_confirmation} onChange={handleChange} placeholder="Re-enter password" required className="w-full px-3.5 py-2.5 pr-11 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                      <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-0 text-muted text-[15px] cursor-pointer" onClick={() => setShowPass2(!showPass2)}>👁️</button>
-                    </div>
-                  </div>
-                </div>
                 <div className="text-xs text-muted leading-relaxed p-2.5 bg-sky rounded-lg mb-4">
                   By registering, you agree to Matrachaya Foundation&apos;s <a href="#" className="text-navy font-bold no-underline">Terms & Conditions</a> and <a href="#" className="text-navy font-bold no-underline">Privacy Policy</a>. Application fee of ₹99 to be paid after form submission.
                 </div>
+                <div className="flex gap-3">
+                  <button type="button" onClick={() => { setMsg({ type: '', text: '' }); setRegisterStep(1); }} className="w-full py-3.5 bg-sky text-navy border-0 rounded-[10px] text-[15px] font-bold font-sans cursor-pointer transition hover:bg-[#dfeaf5]">
+                    ← Back
+                  </button>
                 <button type="submit" disabled={loading} className="w-full py-3.5 bg-red text-white border-0 rounded-[10px] text-[15px] font-bold font-sans cursor-pointer transition hover:bg-red-light hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(215,38,56,0.3)] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
                   {loading ? 'Processing...' : 'Create Account & Apply →'}
                 </button>
+                </div>
+                  </>
+                )}
                 <div className="text-center mt-3.5 text-[13px] text-muted">
                   Already registered? <a href="#" className="text-navy font-bold no-underline" onClick={(e) => { e.preventDefault(); setTab('login'); }}>Login here</a>
                 </div>
