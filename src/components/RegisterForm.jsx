@@ -199,19 +199,6 @@ export default function RegisterForm() {
           <div className="p-7">
             {tab === 'register' ? (
               <form onSubmit={handleRegister}>
-                <div className="flex gap-2.5 mb-5">
-                  <button className="flex-1 py-2.5 border-[1.5px] border-sky rounded-lg text-[13px] font-semibold flex items-center justify-center gap-1.5 bg-white hover:border-[#111] hover:bg-sky transition cursor-pointer">
-                    🔵 Continue with Google
-                  </button>
-                  <button className="flex-1 py-2.5 border-[1.5px] border-sky rounded-lg text-[13px] font-semibold flex items-center justify-center gap-1.5 bg-white hover:border-[#111] hover:bg-sky transition cursor-pointer">
-                    📘 Continue with Facebook
-                  </button>
-                </div>
-                <div className="flex items-center gap-3 mb-5 text-xs text-muted font-semibold">
-                  <span className="flex-1 h-px bg-sky" />
-                  or register with email
-                  <span className="flex-1 h-px bg-sky" />
-                </div>
                 {msg.text && (
                   <div className={`mb-4 p-3 rounded-lg text-sm font-medium ${msg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
                     {msg.text}
