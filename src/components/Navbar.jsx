@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,6 +32,14 @@ export default function Navbar() {
             </li>
           ))}
           <li>
+            <Link
+              to="/login"
+              className="inline-block bg-navy-light text-white text-[13px] font-bold px-5 py-2 rounded-lg no-underline hover:bg-navy transition"
+            >
+              Login
+            </Link>
+          </li>
+          <li>
             <a
               href="#register"
               className="inline-block bg-red text-white text-[13px] font-bold px-5 py-2 rounded-lg no-underline hover:bg-red-light transition"
@@ -61,6 +70,13 @@ export default function Navbar() {
               {l.label}
             </a>
           ))}
+          <Link
+            to="/login"
+            className="block mt-2 text-center bg-navy-light text-white text-sm font-bold px-5 py-2 rounded-lg no-underline"
+            onClick={() => setMenuOpen(false)}
+          >
+            Login
+          </Link>
           <a
             href="#register"
             className="block mt-2 text-center bg-red text-white text-sm font-bold px-5 py-2 rounded-lg no-underline"

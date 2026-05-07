@@ -1,3 +1,4 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import StatsStrip from './components/StatsStrip'
@@ -11,14 +12,15 @@ import Pattern from './components/Pattern'
 import Process from './components/Process'
 import About from './components/About'
 import RegisterForm from './components/RegisterForm'
+import LoginPage from './components/LoginPage'
+import DashboardPage from './components/DashboardPage'
 import Gallery from './components/Gallery'
 import FAQ from './components/FAQ'
 import Footer from './components/Footer'
 
-function App() {
+function Home() {
   return (
-    <div className="min-h-screen bg-navy">
-      <Navbar />
+    <>
       <Hero />
       <StatsStrip />
       <Countdown />
@@ -34,8 +36,24 @@ function App() {
       <RegisterForm />
       <FAQ />
       <Footer />
-    </div>
-  )
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-navy">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App
