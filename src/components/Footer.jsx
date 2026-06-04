@@ -1,4 +1,15 @@
+import { Link } from 'react-router-dom';
+
 export default function Footer() {
+  const quickLinks = [
+    ['About MNMSE', '/about'],
+    ['Scholarship Process', '/scholarship'],
+    ['Partner Universities', '/universities'],
+    ['Exam Calendar', '/#timeline'],
+    ['Eligibility', '/#eligibility'],
+    ['Apply Now', '/#register'],
+  ];
+
   return (
     <footer className="bg-navy pt-14 pb-7 px-[5vw] text-white/50 border-t-[3px] border-gold">
       <div className="w-full">
@@ -30,9 +41,13 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-bold text-white uppercase tracking-[1.2px] mb-3.5">Quick Links</h4>
             <ul className="list-none m-0 p-0 space-y-2.5">
-              {['About MNMSE', 'Scholarship Slabs', 'Partner Universities', 'Exam Calendar', 'Eligibility', 'Apply Now'].map((item) => (
+              {quickLinks.map(([item, href]) => (
                 <li key={item}>
-                  <a href="#" className="text-[13px] text-white/55 no-underline hover:text-gold-light transition">{item}</a>
+                  {href.startsWith('/#') ? (
+                    <a href={href} className="text-[13px] text-white/55 no-underline hover:text-gold-light transition">{item}</a>
+                  ) : (
+                    <Link to={href} className="text-[13px] text-white/55 no-underline hover:text-gold-light transition">{item}</Link>
+                  )}
                 </li>
               ))}
             </ul>
