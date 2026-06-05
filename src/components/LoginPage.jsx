@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StudentDashboard from './StudentDashboard';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://matrachaya.studyintimorleste.com';
 const OTP_API = 'https://webhook.whatapi.in/webhook/695bae0269936b8bb87c3abc';
 
 export default function LoginPage() {

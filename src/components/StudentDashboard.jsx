@@ -1,11 +1,15 @@
 import { useState } from 'react';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://matrachaya.studyintimorleste.com';
 const countries = ['Kazakhstan','Uzbekistan','Russia','Kyrgyzstan','Timor Leste','Nepal','Bangladesh','Vietnam'];
 
 export default function StudentDashboard({ student, onLogout }) {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [form, setForm] = useState({
+    father_name: student?.father_name || '',
+    mother_name: student?.mother_name || '',
+    date_of_birth: student?.date_of_birth || '',
+    communication_address: student?.communication_address || student?.address || '',
     countries_preferred: student?.countries_preferred || [],
     aadhar_card: null,
     passport_photo: null,
@@ -17,6 +21,10 @@ export default function StudentDashboard({ student, onLogout }) {
 
   const handleFileChange = (e) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.files[0] }));
+  };
+
+  const handleChange = (e) => {
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
   const handleCountryChange = (country) => {
@@ -37,8 +45,12 @@ export default function StudentDashboard({ student, onLogout }) {
 
   const calculateProfileCompletion = () => {
     let completed = 0;
-    const total = 5;
+    const total = 9;
     
+    if (form.father_name.trim()) completed++;
+    if (form.mother_name.trim()) completed++;
+    if (form.date_of_birth) completed++;
+    if (form.communication_address.trim()) completed++;
     if (form.countries_preferred.length === 2) completed++;
     if (form.aadhar_card) completed++;
     if (form.passport_photo) completed++;
@@ -57,6 +69,19 @@ export default function StudentDashboard({ student, onLogout }) {
       return;
     }
 
+    const requiredPersonalFields = [
+      ['father_name', 'Please enter father name'],
+      ['mother_name', 'Please enter mother name'],
+      ['date_of_birth', 'Please enter date of birth'],
+      ['communication_address', 'Please enter address'],
+    ];
+    for (const [field, message] of requiredPersonalFields) {
+      if (!form[field]?.trim()) {
+        setMsg({ type: 'error', text: message });
+        return;
+      }
+    }
+
     const requiredFiles = ['aadhar_card', 'passport_photo', 'class_12_marksheet', 'neet_admit_card'];
     for (const file of requiredFiles) {
       if (!form[file]) {
@@ -67,6 +92,11 @@ export default function StudentDashboard({ student, onLogout }) {
 
     setLoading(true);
     const formData = new FormData();
+    formData.append('father_name', form.father_name);
+    formData.append('mother_name', form.mother_name);
+    formData.append('date_of_birth', form.date_of_birth);
+    formData.append('communication_address', form.communication_address);
+    formData.append('address', form.communication_address);
     formData.append('countries_preferred', JSON.stringify(form.countries_preferred));
     formData.append('aadhar_card', form.aadhar_card);
     formData.append('passport_photo', form.passport_photo);
@@ -100,6 +130,10 @@ export default function StudentDashboard({ student, onLogout }) {
   ].filter(Boolean).length / 4) * 100);
   const scholarshipReadiness = Math.round((completion + 80) / 2);
   const profileItems = [
+    ['Father Name', Boolean(form.father_name.trim())],
+    ['Mother Name', Boolean(form.mother_name.trim())],
+    ['Date of Birth', Boolean(form.date_of_birth)],
+    ['Address', Boolean(form.communication_address.trim())],
     ['Countries Selected', form.countries_preferred.length === 2],
     ['Aadhar Card', Boolean(form.aadhar_card)],
     ['Passport Photo', Boolean(form.passport_photo)],
@@ -236,6 +270,18 @@ export default function StudentDashboard({ student, onLogout }) {
                       <p className="font-semibold text-navy">{student?.mobile}</p>
                     </div>
                     <div className="p-4 bg-gradient-to-br from-sky/50 to-sky/30 rounded-xl border border-sky/30">
+                      <p className="text-xs text-muted uppercase tracking-wider mb-1">Father Name</p>
+                      <p className="font-semibold text-navy">{form.father_name || 'Pending'}</p>
+                    </div>
+                    <div className="p-4 bg-gradient-to-br from-sky/50 to-sky/30 rounded-xl border border-sky/30">
+                      <p className="text-xs text-muted uppercase tracking-wider mb-1">Mother Name</p>
+                      <p className="font-semibold text-navy">{form.mother_name || 'Pending'}</p>
+                    </div>
+                    <div className="p-4 bg-gradient-to-br from-sky/50 to-sky/30 rounded-xl border border-sky/30">
+                      <p className="text-xs text-muted uppercase tracking-wider mb-1">Date of Birth</p>
+                      <p className="font-semibold text-navy">{form.date_of_birth || 'Pending'}</p>
+                    </div>
+                    <div className="p-4 bg-gradient-to-br from-sky/50 to-sky/30 rounded-xl border border-sky/30">
                       <p className="text-xs text-muted uppercase tracking-wider mb-1">NEET Roll Number</p>
                       <p className="font-semibold text-navy">{student?.neet_roll_number}</p>
                     </div>
@@ -246,6 +292,10 @@ export default function StudentDashboard({ student, onLogout }) {
                     <div className="p-4 bg-gradient-to-br from-sky/50 to-sky/30 rounded-xl border border-sky/30">
                       <p className="text-xs text-muted uppercase tracking-wider mb-1">Academic State</p>
                       <p className="font-semibold text-navy">{student?.academic_state}</p>
+                    </div>
+                    <div className="p-4 bg-gradient-to-br from-sky/50 to-sky/30 rounded-xl border border-sky/30 sm:col-span-2 lg:col-span-3">
+                      <p className="text-xs text-muted uppercase tracking-wider mb-1">Address</p>
+                      <p className="font-semibold text-navy">{form.communication_address || 'Pending'}</p>
                     </div>
                   </div>
                 </div>
@@ -261,6 +311,31 @@ export default function StudentDashboard({ student, onLogout }) {
                     </div>
                   )}
                   <form onSubmit={handleSubmit}>
+                    <div className="mb-8">
+                      <label className="block text-sm font-bold text-navy mb-4 flex items-center gap-2">
+                        <span className="text-xl">👪</span>
+                        Personal Details
+                      </label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="p-4 bg-sky/30 rounded-xl border-2 border-sky/50">
+                          <label className="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Father Name</label>
+                          <input type="text" name="father_name" value={form.father_name} onChange={handleChange} placeholder="Enter father name" required className="w-full px-4 py-3 border-2 border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-navy focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
+                        </div>
+                        <div className="p-4 bg-sky/30 rounded-xl border-2 border-sky/50">
+                          <label className="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Mother Name</label>
+                          <input type="text" name="mother_name" value={form.mother_name} onChange={handleChange} placeholder="Enter mother name" required className="w-full px-4 py-3 border-2 border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-navy focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
+                        </div>
+                        <div className="p-4 bg-sky/30 rounded-xl border-2 border-sky/50">
+                          <label className="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Date of Birth</label>
+                          <input type="date" name="date_of_birth" value={form.date_of_birth} onChange={handleChange} required className="w-full px-4 py-3 border-2 border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-navy focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
+                        </div>
+                        <div className="p-4 bg-sky/30 rounded-xl border-2 border-sky/50 md:col-span-2">
+                          <label className="block text-xs font-bold text-navy uppercase tracking-wider mb-2">Address</label>
+                          <textarea name="communication_address" value={form.communication_address} onChange={handleChange} placeholder="Enter full communication address" required rows="3" className="w-full resize-none px-4 py-3 border-2 border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-navy focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
+                        </div>
+                      </div>
+                    </div>
+
                     <div className="mb-8">
                       <label className="block text-sm font-bold text-navy mb-4 flex items-center gap-2">
                         <span className="text-xl">🌍</span>
@@ -300,7 +375,7 @@ export default function StudentDashboard({ student, onLogout }) {
                     </div>
 
                     <button type="submit" disabled={loading} className="w-full py-4 bg-red text-white border-0 rounded-xl text-base font-bold font-sans cursor-pointer transition hover:bg-red-light hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(215,38,56,0.3)] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
-                      {loading ? 'Submitting...' : 'Submit Documents →'}
+                      {loading ? 'Submitting...' : 'Submit Profile →'}
                     </button>
                   </form>
                 </div>

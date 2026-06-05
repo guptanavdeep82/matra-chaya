@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://matrachaya.studyintimorleste.com';
 const OTP_API = 'https://webhook.whatapi.in/webhook/695bae0269936b8bb87c3abc';
 const states = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Other'];
-const countries = ['Kazakhstan','Uzbekistan','Russia','Kyrgyzstan','Timor Leste','Nepal','Bangladesh','Vietnam'];
 
 export default function RegisterForm() {
   const [otp, setOtp] = useState('');
@@ -14,9 +13,7 @@ export default function RegisterForm() {
   // Registration form state
   const [form, setForm] = useState({
     first_name: '', last_name: '', email: '', mobile: '',
-    city: '', state: '', academic_state: '', neet_status: '', neet_roll_number: '',
-    father_name: '', mother_name: '', aadhar_number: '', date_of_birth: '',
-    communication_address: '', pin_code: ''
+    city: '', state: ''
   });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
@@ -79,7 +76,7 @@ export default function RegisterForm() {
       const data = await res.json();
       if (data.success) {
         setMsg({ type: 'success', text: data.message || 'Registration successful! Please login to complete your application.' });
-        setForm({ first_name: '', last_name: '', email: '', mobile: '', city: '', state: '', academic_state: '', neet_status: '', neet_roll_number: '', father_name: '', mother_name: '', aadhar_number: '', date_of_birth: '', communication_address: '', pin_code: '' });
+        setForm({ first_name: '', last_name: '', email: '', mobile: '', city: '', state: '' });
         setOtp('');
         setEnteredOtp('');
         setOtpVerified(false);
@@ -191,66 +188,8 @@ export default function RegisterForm() {
                     </select>
                   </div>
                 </div>
-                <div className="text-sm font-bold text-navy mt-5 mb-3">Academic / NEET Details</div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">State</label>
-                    <select name="academic_state" value={form.academic_state} onChange={handleChange} required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition">
-                      <option value="">Select State</option>
-                      {states.map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">NEET Status</label>
-                    <select name="neet_status" value={form.neet_status} onChange={handleChange} required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition">
-                      <option value="">Select</option>
-                      <option value="Qualified NEET UG 2026">Qualified NEET UG 2026</option>
-                      <option value="Appeared / Result Awaited">Appeared / Result Awaited</option>
-                      <option value="Qualified NEET UG 2025">Qualified NEET UG 2025</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">NEET Roll Number</label>
-                    <input type="text" name="neet_roll_number" value={form.neet_roll_number} onChange={handleChange} placeholder="Enter NEET Roll No." required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                  </div>
-                </div>
-                <div className="text-sm font-bold text-navy mt-5 mb-3">Additional Details</div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Father Name</label>
-                    <input type="text" name="father_name" value={form.father_name} onChange={handleChange} placeholder="Father Name" required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Mother Name</label>
-                    <input type="text" name="mother_name" value={form.mother_name} onChange={handleChange} placeholder="Mother Name" required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Aadhar Number</label>
-                    <input type="text" name="aadhar_number" value={form.aadhar_number} onChange={handleChange} placeholder="Enter Aadhar Number" required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Date of Birth</label>
-                    <input type="date" name="date_of_birth" value={form.date_of_birth} onChange={handleChange} required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Communication Address</label>
-                    <input type="text" name="communication_address" value={form.communication_address} onChange={handleChange} placeholder="Full Address" required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-navy uppercase tracking-wider mb-1">Pin Code</label>
-                    <input type="text" name="pin_code" value={form.pin_code} onChange={handleChange} placeholder="Pin Code" required className="w-full px-3.5 py-2.5 border-[1.5px] border-sky rounded-lg text-sm text-text font-sans bg-white focus:border-[#111] focus:shadow-[0_0_0_3px_rgba(0,0,0,0.06)] outline-none transition" />
-                  </div>
-                </div>
                 <div className="text-xs text-muted leading-relaxed p-2.5 bg-sky rounded-lg mb-4">
-                  By registering, you agree to Matrachaya Foundation&apos;s <a href="#" className="text-navy font-bold no-underline">Terms & Conditions</a> and <a href="#" className="text-navy font-bold no-underline">Privacy Policy</a>. After registration, please login to complete your application by uploading documents and selecting preferred countries.
+                  By registering, you agree to Matrachaya Foundation&apos;s <a href="#" className="text-navy font-bold no-underline">Terms & Conditions</a> and <a href="#" className="text-navy font-bold no-underline">Privacy Policy</a>. After registration, please login to the student panel to complete academic details, documents, and preferred countries.
                 </div>
                 <button type="submit" disabled={loading} className="w-full py-3.5 bg-red text-white border-0 rounded-[10px] text-[15px] font-bold font-sans cursor-pointer transition hover:bg-red-light hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(215,38,56,0.3)] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
                   {loading ? 'Processing...' : 'Register Now →'}
